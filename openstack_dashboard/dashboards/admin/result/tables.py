@@ -52,7 +52,7 @@ class CheckTable(tables.DataTable):
     node = tables.Column('node', verbose_name=_('Node Number'))
     results = tables.Column('result', verbose_name=_('Check Results'))    
     class Meta:
-        name = "Check Results"
+        name = "results"
         verbose_name = _("Results")
         table_actions = (ResultFilterAction, DeleteResult)
         row_actions = (DeleteResult,)

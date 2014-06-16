@@ -429,6 +429,14 @@ def flavor_access_list(request, flavor=None):
     """Get the list of access instance sizes (flavors)."""
     return novaclient(request).flavor_access.list(flavor=flavor)
 
+@memoized
+def result_list(request, is_public=True):
+    with open("fake_data.txt", 'rb') as f:
+        re_list = pickle.load(f)
+    return re_list
+    """Get the list of check results."""
+
+
 
 def add_tenant_to_flavor(request, flavor, tenant):
     """Add a tenant to the given flavor access list."""

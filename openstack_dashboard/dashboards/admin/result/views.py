@@ -34,6 +34,8 @@ from openstack_dashboard.dashboards.admin.result \
 INDEX_URL = "horizon:admin:result:index"
 
 
+#change when nova part done
+
 class IndexView(tables.DataTableView):
     table_class = project_tables.CheckTable
     template_name = 'admin/result/index.html'
@@ -42,9 +44,9 @@ class IndexView(tables.DataTableView):
         request = self.request
         results = []
         try:
-            #change when nova part done
+            # "is_public=None" will return all flavors.
             results = api.nova.flavor_list(request, None)
         except Exception:
             exceptions.handle(request,
-                              _('Unable to retrieve result list.'))
+                              _('Unable to retrieve flavor list.'))
         return results
