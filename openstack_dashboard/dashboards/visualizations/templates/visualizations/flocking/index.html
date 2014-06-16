@@ -8,6 +8,15 @@
 
 {% block main %}
 <div class="quota-dynamic">
+  <h3 class="quota-heading">Change Status</h3>
+</div>
+	<div>    
+    	SPICE Enabled: <input class="table-row-multi-select" name="object_ids" type="checkbox" value="1"><br>
+    	Remove all nodes from TCP when going to shutdown: <input class="table-row-multi-select" name="object_ids" type="checkbox" value="1"><br>
+      <button class="btn btn-primary" type="submit">Save</button>    
+    	
+    </div>  
+<div class="quota-dynamic">
   <h3 class="quota-heading">OpenAttestation</h3>
 </div>
 <table id="endpoints" class="table table-bordered table-striped datatable tablesorter tablesorter-default">
@@ -36,6 +45,7 @@
     </tbody>
   </table> 
   
+
   <div class="quota-dynamic">
   <h3 class="quota-heading">View Logs</h3>
 </div>
@@ -49,12 +59,5 @@
     </div>
   </form>
 
-</div>
-<div class="quota-dynamic">
-  <h3 class="quota-heading">Change Status</h3>
-</div>
-	<div>    
-    	SPICE Enabled: <input class="table-row-multi-select" name="object_ids" type="checkbox" value="1"><br>
-    	Remove all nodes from TCP when going to shutdown: <input class="table-row-multi-select" name="object_ids" type="checkbox" value="1">
-    </div>  
+</div>    
 {% endblock %}
