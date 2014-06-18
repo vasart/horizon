@@ -18,7 +18,7 @@ from horizon import tables
 from horizon.templatetags import sizeformat
 
 
-class AdminHypervisorsTable(tables.DataTable):
+class AdminLogsTable(tables.DataTable):
     hostname = tables.Column("hypervisor_hostname",
                              link=("horizon:admin:hypervisors:detail"),
                              attrs={'data-type': 'naturalSort'},
@@ -64,7 +64,7 @@ class AdminHypervisorsTable(tables.DataTable):
         verbose_name = _("Hypervisors")
 
 
-class AdminHypervisorInstancesTable(tables.DataTable):
+class AdminLogInstancesTable(tables.DataTable):
     name = tables.Column("name",
                          verbose_name=_("Instance Name"))
 

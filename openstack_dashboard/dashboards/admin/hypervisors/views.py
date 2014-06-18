@@ -23,7 +23,7 @@ from openstack_dashboard.dashboards.admin.hypervisors \
 
 
 class AdminIndexView(tables.DataTableView):
-    table_class = project_tables.AdminHypervisorsTable
+    table_class = project_tables.AdminLogsTable
     template_name = 'admin/hypervisors/index.html'
 
     def get_data(self):
@@ -49,7 +49,7 @@ class AdminIndexView(tables.DataTableView):
 
 
 class AdminDetailView(tables.DataTableView):
-    table_class = project_tables.AdminHypervisorInstancesTable
+    table_class = project_tables.AdminLogInstancesTable
     template_name = 'admin/hypervisors/detail.html'
 
     def get_data(self):

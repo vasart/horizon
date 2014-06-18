@@ -60,7 +60,7 @@ class NovaServicesTab(tabs.TableTab):
         return services
 
 
-class NetworkAgentsTab(tabs.TableTab):
+class SecurityChecksOptionsTab(tabs.TableTab):
     table_classes = (tables.NetworkAgentsTable,)
     name = _("Network Agents")
     slug = "network_agents"
@@ -99,5 +99,5 @@ class DefaultQuotasTab(tabs.TableTab):
 class SystemInfoTabs(tabs.TabGroup):
     slug = "system_info"
     tabs = (ServicesTab, NovaServicesTab,
-            NetworkAgentsTab, DefaultQuotasTab)
+            SecurityChecksOptionsTab, DefaultQuotasTab)
     sticky = True
