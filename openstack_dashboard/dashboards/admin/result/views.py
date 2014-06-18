@@ -45,7 +45,11 @@ class IndexView(tables.DataTableView):
         results = []
         try:
             # "is_public=None" will return all flavors.
-            results = api.nova.flavor_list(request, None)
+           # results = api.nova.flavor_list(request, None)
+            results = api.nova.result_list(request, None)
+            print results
+            # for i in range(len(results)):
+            #     print results[i]
         except Exception:
             exceptions.handle(request,
                               _('Unable to retrieve flavor list.'))
