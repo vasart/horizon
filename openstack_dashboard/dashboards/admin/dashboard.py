@@ -22,7 +22,7 @@ class SystemPanels(horizon.PanelGroup):
     name = _("System")
     panels = ('overview', 'metering', 'hypervisors', 'aggregates',
               'instances', 'volumes', 'flavors', 'images',
-              'networks', 'routers', 'info')
+              'networks', 'routers', 'info', )
 
 
 class IdentityPanels(horizon.PanelGroup):
@@ -36,6 +36,7 @@ class PeriodicChecksPanels(horizon.PanelGroup):
     name = "Periodic Checks"
     panels = ('check_global', 'check_config', 'check_result')
 
+
 class Admin(horizon.Dashboard):
     name = _("Admin")
     slug = "admin"
@@ -45,3 +46,4 @@ class Admin(horizon.Dashboard):
 
 
 horizon.register(Admin)
+

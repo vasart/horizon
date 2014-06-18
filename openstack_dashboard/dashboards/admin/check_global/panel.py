@@ -5,9 +5,9 @@ import horizon
 from openstack_dashboard.dashboards.admin import dashboard
 
 
-class Check_Global(horizon.Panel):
-    name = _("Settings")
+class SecurityChecksSettings(horizon.Panel):
+    name = _("Periodic Checks Settings")
     slug = "check_global"
 
 
-dashboard.Admin.register(Check_Global)
+dashboard.Admin.register(SecurityChecksSettings)

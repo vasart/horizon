@@ -1,9 +1,8 @@
 from django.conf.urls import patterns  # noqa
 from django.conf.urls import url  # noqa
 
-from .views import IndexView
+from openstack_dashboard.dashboards.admin.check_global import views
 
 
-urlpatterns = patterns('',
-    url(r'^$', IndexView.as_view(), name='index'),
-)
+urlpatterns = patterns('openstack_dashboard.dashboards.admin.check_global.views',
+    url(r'^$', views.IndexView.as_view(), name='index'))
