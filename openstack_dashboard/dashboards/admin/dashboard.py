@@ -31,10 +31,15 @@ class IdentityPanels(horizon.PanelGroup):
     panels = ('domains', 'projects', 'users', 'groups', 'roles')
 
 
+class PeriodicChecksPanels(horizon.PanelGroup):
+    slug = "periodic_checks"
+    name = "Periodic Checks"
+    panels = ('check_global', 'check_config', 'check_result')
+
 class Admin(horizon.Dashboard):
     name = _("Admin")
     slug = "admin"
-    panels = (SystemPanels, IdentityPanels)
+    panels = (SystemPanels, IdentityPanels, PeriodicChecksPanels)
     default_panel = 'overview'
     permissions = ('openstack.roles.admin',)
 

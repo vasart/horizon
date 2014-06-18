@@ -367,6 +367,14 @@ class FloatingIpManager(network_base.FloatingIpManager):
         return conf.HORIZON_CONFIG["simple_ip_management"]
 
 
+class PeriodicCheck(object):
+    def __init__(self, id, name, desc, timeout):
+        self.id = id
+        self.name = name
+        self.desc = desc
+        self.timeout = timeout
+
+
 def novaclient(request):
     insecure = getattr(settings, 'OPENSTACK_SSL_NO_VERIFY', False)
     cacert = getattr(settings, 'OPENSTACK_SSL_CACERT', None)
@@ -757,3 +765,15 @@ def extension_supported(extension_name, request):
 def can_set_server_password():
     features = getattr(settings, 'OPENSTACK_HYPERVISOR_FEATURES', {})
     return features.get('can_set_password', False)
+
+
+def periodic_checks_list():
+    checks = []
+    checks.append(PeriodicCheck(0, 'OpenAttestation', 'Static file integrity check using IMA/TPM', 600))
+    checks.append(PeriodicCheck(1, 'DynMem', 'Dynamic memory check', 300))
+    checks.append(PeriodicCheck(2, 'Yet Another Check', 'One more mock check', 720))
+    return checks
+
+
+def periodic_check_delete(request, obj_id):
+    return []
