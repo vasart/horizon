@@ -21,8 +21,6 @@ from openstack_dashboard import api
 
 from openstack_dashboard.dashboards.admin.check_result \
     import tables as project_tables
-from openstack_dashboard.dashboards.admin.check_result \
-    import workflows as flavor_workflows
 
 
 INDEX_URL = "horizon:admin:check_result:index"
