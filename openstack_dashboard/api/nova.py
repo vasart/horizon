@@ -21,6 +21,7 @@
 from __future__ import absolute_import
 
 import logging
+import json
 
 from django.conf import settings
 from django.utils.functional import cached_property  # noqa
@@ -298,6 +299,14 @@ class FlavorExtraSpec(object):
         self.key = key
         self.value = val
 
+class checkResult(object):
+    def __init__(self, id, time, name, node, result):
+        self.id = id
+        self.time = time
+        self.name = name
+        self.node = node
+        self.result = result
+
 
 class FloatingIp(base.APIResourceWrapper):
     _attrs = ['id', 'ip', 'fixed_ip', 'port_id', 'instance_id', 'pool']
@@ -429,13 +438,29 @@ def flavor_get(request, flavor_id):
 @memoized
 def flavor_list(request, is_public=True):
     """Get the list of available instance sizes (flavors)."""
-    return novaclient(request).flavors.list(is_public=is_public)
+    list_re = novaclient(request).flavors.list(is_public=is_public)
+    return list_re
 
 
 @memoized
 def flavor_access_list(request, flavor=None):
     """Get the list of access instance sizes (flavors)."""
     return novaclient(request).flavor_access.list(flavor=flavor)
+
+@memoized
+def result_list(request, is_public=True):
+    #ins = open( "fake_data.txt", "r" )
+    results = []
+    """Get the list of check results."""
+    results.append(checkResult(1,'2014/06/12 12:23:12','OpenAttestation',1,'Pass'))
+    results.append(checkResult(2,'2014/06/12 12:24:12','OpenAttestation',2,'Pass'))
+    results.append(checkResult(3,'2014/06/12 12:25:12','OpenAttestation',3,'Pass'))
+    results.append(checkResult(4,'2014/06/12 12:26:12','OpenAttestation',4,'Fail'))
+    # re_list = []
+    # with open("fake_data.txt", 'rb') as f:
+    #     re_list.append(f)
+    return results
+
 
 
 def add_tenant_to_flavor(request, flavor, tenant):

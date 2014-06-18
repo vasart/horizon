@@ -46,4 +46,3 @@ class Admin(horizon.Dashboard):
 
 
 horizon.register(Admin)
-
