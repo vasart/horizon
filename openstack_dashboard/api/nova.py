@@ -306,8 +306,7 @@ class checkResult(object):
         self.name = name
         self.node = node
         self.result = result
-
-
+            
 class FloatingIp(base.APIResourceWrapper):
     _attrs = ['id', 'ip', 'fixed_ip', 'port_id', 'instance_id', 'pool']
 
@@ -461,8 +460,13 @@ def result_list(request, is_public=True):
     #     re_list.append(f)
     return results
 
+def periodic_checks_log(request, is_public=True):
+    return novaclient(request).periodic_checks.get_logs()
 
-
+def periodic_checks_settings(request, is_public=True):
+    
+    return novaclient(request).periodic_checks.get_settings()
+    
 def add_tenant_to_flavor(request, flavor, tenant):
     """Add a tenant to the given flavor access list."""
     return novaclient(request).flavor_access.add_tenant_access(
