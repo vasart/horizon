@@ -32,7 +32,7 @@ class IndexView(tables.DataTableView):
         request = self.request
         checks = []
         try:
-            checks = api.nova.periodic_checks_list()
+            checks = api.nova.periodic_checks_list(request)
         except Exception:
             exceptions.handle(request,
                               _('Unable to retrieve checks list.'))
@@ -55,7 +55,7 @@ class UpdateView(workflows.WorkflowView):
 
         try:
             # Get initial flavor information
-            check = api.nova.check_get(self.request, check_id)
+            check = api.nova.periodic_check_get(self.request, check_id)
         except Exception:
             exceptions.handle(self.request,
                               _('Unable to retrieve check details.'),

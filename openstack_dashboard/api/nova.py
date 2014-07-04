@@ -299,13 +299,6 @@ class FlavorExtraSpec(object):
         self.key = key
         self.value = val
 
-class checkResult(object):
-    def __init__(self, id, time, name, node, result):
-        self.id = id
-        self.time = time
-        self.name = name
-        self.node = node
-        self.result = result
 
 
 class FloatingIp(base.APIResourceWrapper):
@@ -376,14 +369,6 @@ class FloatingIpManager(network_base.FloatingIpManager):
         return conf.HORIZON_CONFIG["simple_ip_management"]
 
 
-class PeriodicCheck(object):
-    def __init__(self, id, name, desc, timeout):
-        self.id = id
-        self.name = name
-        self.desc = desc
-        self.timeout = timeout
-
-
 def novaclient(request):
     insecure = getattr(settings, 'OPENSTACK_SSL_NO_VERIFY', False)
     cacert = getattr(settings, 'OPENSTACK_SSL_CACERT', None)
@@ -447,19 +432,7 @@ def flavor_access_list(request, flavor=None):
     """Get the list of access instance sizes (flavors)."""
     return novaclient(request).flavor_access.list(flavor=flavor)
 
-@memoized
-def result_list(request, is_public=True):
-    #ins = open( "fake_data.txt", "r" )
-    results = []
-    """Get the list of check results."""
-    results.append(checkResult(1,'2014/06/12 12:23:12','OpenAttestation',1,'Pass'))
-    results.append(checkResult(2,'2014/06/12 12:24:12','OpenAttestation',2,'Pass'))
-    results.append(checkResult(3,'2014/06/12 12:25:12','OpenAttestation',3,'Pass'))
-    results.append(checkResult(4,'2014/06/12 12:26:12','OpenAttestation',4,'Fail'))
-    # re_list = []
-    # with open("fake_data.txt", 'rb') as f:
-    #     re_list.append(f)
-    return results
+
 
 
 
@@ -792,13 +765,27 @@ def can_set_server_password():
     return features.get('can_set_password', False)
 
 
-def periodic_checks_list():
-    checks = []
-    checks.append(PeriodicCheck(0, 'OpenAttestation', 'Static file integrity check using IMA/TPM', 600))
-    checks.append(PeriodicCheck(1, 'DynMem', 'Dynamic memory check', 300))
-    checks.append(PeriodicCheck(2, 'Yet Another Check', 'One more mock check', 720))
-    return checks
+def periodic_checks_list(request):
+    return novaclient(request).periodic_checks.get_checks_list()
 
+def periodic_check_get(request, check_id):
+    return novaclient(request).periodic_checks.get_specific_check(check_id)
 
 def periodic_check_delete(request, obj_id):
     return []
+
+def periodic_checks_log(request):
+    return novaclient(request).periodic_checks.get_log_records()
+
+def periodic_checks_options(request):
+    return novaclient(request).periodic_checks.get_global_settings()
+
+def periodic_checks_result_list(request):
+    #ins = open( "fake_data.txt", "r" )
+    # re_list = []
+    # with open("fake_data.txt", 'rb') as f:
+    #     re_list.append(f)
+    return novaclient(request).periodic_checks.get_results_list()
+    
+
+    

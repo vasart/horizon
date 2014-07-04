@@ -38,7 +38,7 @@ class IndexView(tables.DataTableView):
         try:
             # "is_public=None" will return all flavors.
            # results = api.nova.flavor_list(request, None)
-            results = api.nova.result_list(request, None)
+            results = api.nova.periodic_checks_result_list(request)
             print results
             # for i in range(len(results)):
             #     print results[i]

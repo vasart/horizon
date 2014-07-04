@@ -17,25 +17,11 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import tabs
 
-from openstack_dashboard.api import nova
+from openstack_dashboard import api
 
 from openstack_dashboard.dashboards.admin.check_global import constants
 from openstack_dashboard.dashboards.admin.check_global import tables
-from logging import LogRecord
 
-
-class LogRecord(object):
-    def __init__(self, record_id, log_record_time, log_record_source, log_record_message):
-        self.id = record_id
-        self.log_record_time = log_record_time
-        self.log_record_source = log_record_source
-        self.log_record_message = log_record_message
-
-
-class Option(object):
-    def __init__(self, name, value):
-        self.id = name
-        self.value = value
 
 
 class SecurityChecksLogsTab(tabs.TableTab):
@@ -45,9 +31,7 @@ class SecurityChecksLogsTab(tabs.TableTab):
     template_name = constants.INFO_DETAIL_TEMPLATE_NAME
 
     def get_security_checks_logs_data(self):
-        log_records = []
-        log_records.append(LogRecord("1", "12345", "source1", "message1"))
-        log_records.append(LogRecord("2", "12312", "source2", "message2"))
+        log_records = api.nova.periodic_checks_log(self.request)
         return log_records
 
 
@@ -58,10 +42,7 @@ class SecurityChecksOptionsTab(tabs.TableTab):
     template_name = constants.INFO_DETAIL_TEMPLATE_NAME
 
     def get_security_checks_options_data(self):
-        options = []
-        options.append(Option("Security Checks Enabled", True))
-        options.append(Option("Clean Tcp When Down", True))
-        options.append(Option("OpenAttestation Location", "192.168.255.4"))
+        options = api.nova.periodic_checks_options(self.request)
         return options
 
 
