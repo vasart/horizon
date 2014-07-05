@@ -19,18 +19,6 @@ from horizon import tables
 from openstack_dashboard.dashboards.admin.check_global import constants
 
 
-class SecurityChecksLogsFilterAction(tables.FilterAction):
-    def filter(self, table, log_records, filter_string):
-        q = filter_string.lower()
-
-        def comp(log_record):
-            if q in log_record.type.lower():
-                return True
-            return False
-
-        return filter(comp, log_records)
-
-
 def get_enabled(service, reverse=False):
     options = ["Enabled", "Disabled"]
     if reverse:
@@ -39,20 +27,6 @@ def get_enabled(service, reverse=False):
     if service.host:
         return options[0] if not service.disabled else options[1]
     return None
-
-
-class SecurityChecksLogsTable(tables.DataTable):
-    id = tables.Column('id', hidden=True)
-    log_record_time = tables.Column('log_record_time', verbose_name=_('Log Record Time'))
-    log_record_source = tables.Column('log_record_source', verbose_name=_('Log Record Source'))
-    log_record_message = tables.Column('log_record_message', verbose_name=_('Log Record Message'), status=True)
-
-    class Meta:
-        name = "security_checks_logs"
-        verbose_name = _("Security Checks Logs")
-        table_actions = (SecurityChecksLogsFilterAction,)
-        multi_select = False
-
 
 class SecurityChecksOptionsFilterAction(tables.FilterAction):
     def filter(self, table, options, filter_string):
@@ -66,10 +40,11 @@ class SecurityChecksOptionsFilterAction(tables.FilterAction):
         return filter(comp, options)
 
 
-class EditOption(tables.Action):
+class EditOption(tables.LinkAction):
     name = "edit_option"
     verbose_name = _("Edit Option")
-    preempt = True
+    url = "horizon:admin:check_global:update"
+    classes = ("ajax-modal", "btn-edit")
     policy_rules = (('identity', 'admin_required'),)
 
     def allowed(self, request, datum):
