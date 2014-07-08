@@ -10,6 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
@@ -22,6 +23,9 @@ from openstack_dashboard.dashboards.admin.check_config \
     import tables as check_tables
 from openstack_dashboard.dashboards.admin.check_config \
     import workflows as check_workflows
+
+
+INDEX_URL = "horizon:admin:check_config:index"
 
 
 class IndexView(tables.DataTableView):
@@ -54,7 +58,7 @@ class UpdateView(workflows.WorkflowView):
         check_id = self.kwargs['id']
 
         try:
-            # Get initial flavor information
+            # Get initial periodic check information
             check = api.nova.periodic_check_get(self.request, check_id)
         except Exception:
             exceptions.handle(self.request,

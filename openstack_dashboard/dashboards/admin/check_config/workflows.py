@@ -10,7 +10,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
@@ -69,7 +68,7 @@ class AddCheckInfoAction(workflows.Action):
                 if check.id == check_id:
                     raise forms.ValidationError(
                         _('The ID "%s" is already used by another check.')
-                        % flavor_id
+                        % check_id
                     )
         return cleaned_data
 
@@ -104,11 +103,10 @@ class AddCheck(workflows.Workflow):
         return message % self.context['name']
 
     def handle(self, request, data):
-        check_id = data.get('check_id') or 'auto'
-
         # Add new check
+        # check_id = data.get('check_id') or 'auto'
         try:
-            self.object = api.nova.flavor_create(request,
+            self.object = api.nova.check_create(request,
                                                  name=data['name'],
                                                  desc=data['desc'],
                                                  timeout=data['timeout'])
@@ -143,7 +141,7 @@ class UpdateCheck(workflows.Workflow):
         # Update check information
         try:
             check_id = data['check_id']
-            api.nova.check_update(request, check.id)
+            api.nova.check_update(request, check_id)
         except Exception:
             exceptions.handle(request, ignore=True)
             return False

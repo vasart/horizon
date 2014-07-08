@@ -12,11 +12,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-
 from django.utils.translation import ugettext_lazy as _
 
 from horizon import tables
-from openstack_dashboard.dashboards.admin.check_logs import constants
 
 
 class SecurityChecksLogsFilterAction(tables.FilterAction):
@@ -43,13 +41,15 @@ def get_enabled(service, reverse=False):
 
 class SecurityChecksLogsTable(tables.DataTable):
     id = tables.Column('id', hidden=True)
-    log_record_time = tables.Column('log_record_time', verbose_name=_('Log Record Time'))
-    log_record_source = tables.Column('log_record_source', verbose_name=_('Log Record Source'))
-    log_record_message = tables.Column('log_record_message', verbose_name=_('Log Record Message'), status=True)
+    log_record_time = tables.Column('log_record_time',
+        verbose_name=_('Log Record Time'))
+    log_record_source = tables.Column('log_record_source',
+        verbose_name=_('Log Record Source'))
+    log_record_message = tables.Column('log_record_message',
+        verbose_name=_('Log Record Message'), status=True)
 
     class Meta:
         name = "security_checks_logs"
         verbose_name = _("Security Checks Logs")
         table_actions = (SecurityChecksLogsFilterAction,)
         multi_select = False
-

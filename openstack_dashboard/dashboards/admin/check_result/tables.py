@@ -10,9 +10,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.core.urlresolvers import reverse
-from django.template import defaultfilters as filters
-from django.utils.http import urlencode
 from django.utils.translation import ugettext_lazy as _
 
 from horizon import tables
@@ -45,6 +42,7 @@ class CheckTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_('Check Name'))
     node = tables.Column('node', verbose_name=_('Node Number'))
     results = tables.Column('result', verbose_name=_('Check Results'))
+
     class Meta:
         name = "results"
         verbose_name = _("Results")

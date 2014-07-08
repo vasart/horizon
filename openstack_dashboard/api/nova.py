@@ -21,7 +21,6 @@
 from __future__ import absolute_import
 
 import logging
-import json
 
 from django.conf import settings
 from django.utils.functional import cached_property  # noqa
@@ -300,7 +299,6 @@ class FlavorExtraSpec(object):
         self.value = val
 
 
-
 class FloatingIp(base.APIResourceWrapper):
     _attrs = ['id', 'ip', 'fixed_ip', 'port_id', 'instance_id', 'pool']
 
@@ -431,9 +429,6 @@ def flavor_list(request, is_public=True):
 def flavor_access_list(request, flavor=None):
     """Get the list of access instance sizes (flavors)."""
     return novaclient(request).flavor_access.list(flavor=flavor)
-
-
-
 
 
 def add_tenant_to_flavor(request, flavor, tenant):
@@ -768,24 +763,22 @@ def can_set_server_password():
 def periodic_checks_list(request):
     return novaclient(request).periodic_checks.get_checks_list()
 
+
 def periodic_check_get(request, check_id):
     return novaclient(request).periodic_checks.get_specific_check(check_id)
+
 
 def periodic_check_delete(request, obj_id):
     return []
 
+
 def periodic_checks_log(request):
     return novaclient(request).periodic_checks.get_log_records()
+
 
 def periodic_checks_options(request):
     return novaclient(request).periodic_checks.get_global_settings()
 
-def periodic_checks_result_list(request):
-    #ins = open( "fake_data.txt", "r" )
-    # re_list = []
-    # with open("fake_data.txt", 'rb') as f:
-    #     re_list.append(f)
-    return novaclient(request).periodic_checks.get_results_list()
-    
 
-    
+def periodic_checks_result_list(request):
+    return novaclient(request).check_results.get_results_list()

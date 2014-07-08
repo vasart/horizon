@@ -12,11 +12,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-
 from django.utils.translation import ugettext_lazy as _
 
 from horizon import tables
-from openstack_dashboard.dashboards.admin.check_global import constants
 
 
 def get_enabled(service, reverse=False):
@@ -27,6 +25,7 @@ def get_enabled(service, reverse=False):
     if service.host:
         return options[0] if not service.disabled else options[1]
     return None
+
 
 class SecurityChecksOptionsFilterAction(tables.FilterAction):
     def filter(self, table, options, filter_string):

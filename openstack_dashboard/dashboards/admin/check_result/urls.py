@@ -17,6 +17,7 @@ from django.conf.urls import url  # noqa
 from openstack_dashboard.dashboards.admin.check_result import views
 
 
-urlpatterns = patterns('openstack_dashboard.dashboards.admin.check_result.views',
+urlpatterns = patterns(
+    'openstack_dashboard.dashboards.admin.check_result.views',
     url(r'^$', views.IndexView.as_view(), name='index'),
 )

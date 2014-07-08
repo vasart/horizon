@@ -10,12 +10,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
 from horizon import exceptions
 from horizon import tables
-from horizon import workflows
 
 from openstack_dashboard import api
 
@@ -36,12 +34,8 @@ class IndexView(tables.DataTableView):
         request = self.request
         results = []
         try:
-            # "is_public=None" will return all flavors.
-           # results = api.nova.flavor_list(request, None)
+            # results = api.nova.flavor_list(request, None)
             results = api.nova.periodic_checks_result_list(request)
-            print results
-            # for i in range(len(results)):
-            #     print results[i]
         except Exception:
             exceptions.handle(request,
                               _('Unable to retrieve result list.'))
