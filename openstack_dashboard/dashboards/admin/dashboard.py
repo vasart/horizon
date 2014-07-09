@@ -22,7 +22,7 @@ class SystemPanels(horizon.PanelGroup):
     name = _("System")
     panels = ('overview', 'metering', 'hypervisors', 'aggregates',
               'instances', 'volumes', 'flavors', 'images',
-              'networks', 'routers', 'info')
+              'networks', 'routers', 'info', )
 
 
 class IdentityPanels(horizon.PanelGroup):
@@ -31,10 +31,16 @@ class IdentityPanels(horizon.PanelGroup):
     panels = ('domains', 'projects', 'users', 'groups', 'roles')
 
 
+class PeriodicChecksPanels(horizon.PanelGroup):
+    slug = "periodic_checks"
+    name = "Periodic Checks"
+    panels = ('check_global', 'check_config', 'check_result', 'check_logs')
+
+
 class Admin(horizon.Dashboard):
     name = _("Admin")
     slug = "admin"
-    panels = (SystemPanels, IdentityPanels)
+    panels = (SystemPanels, IdentityPanels) 
     default_panel = 'overview'
     permissions = ('openstack.roles.admin',)
 

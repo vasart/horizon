@@ -437,7 +437,8 @@ def flavor_get(request, flavor_id):
 @memoized
 def flavor_list(request, is_public=True):
     """Get the list of available instance sizes (flavors)."""
-    return novaclient(request).flavors.list(is_public=is_public)
+    list_re = novaclient(request).flavors.list(is_public=is_public)
+    return list_re
 
 
 @memoized
@@ -773,3 +774,27 @@ def extension_supported(extension_name, request):
 def can_set_server_password():
     features = getattr(settings, 'OPENSTACK_HYPERVISOR_FEATURES', {})
     return features.get('can_set_password', False)
+
+
+def periodic_checks_list(request):
+    return novaclient(request).periodic_checks.get_checks_list()
+
+
+def periodic_check_get(request, check_id):
+    return novaclient(request).periodic_checks.get_specific_check(check_id)
+
+
+def periodic_check_delete(request, obj_id):
+    return []
+
+
+def periodic_checks_log(request):
+    return novaclient(request).periodic_checks.get_log_records()
+
+
+def periodic_checks_options(request):
+    return novaclient(request).periodic_checks.get_global_settings()
+
+
+def periodic_checks_result_list(request):
+    return novaclient(request).check_results.get_results_list()
