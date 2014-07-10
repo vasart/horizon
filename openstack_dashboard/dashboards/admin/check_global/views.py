@@ -28,3 +28,5 @@ class IndexView(tables.DataTableView):
     def get_data(self):
         options = api.nova.periodic_checks_options(self.request)
         return options
+
+

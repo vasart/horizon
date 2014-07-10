@@ -14,8 +14,14 @@
 
 from django.utils.translation import ugettext_lazy as _
 
+
 from horizon import tables
 
+from openstack_dashboard import api
+
+
+ENABLE = 0
+DISABLE = 1
 
 def get_enabled(service, reverse=False):
     options = ["Enabled", "Disabled"]
@@ -38,29 +44,56 @@ class SecurityChecksOptionsFilterAction(tables.FilterAction):
 
         return filter(comp, options)
 
-
-class EditOption(tables.LinkAction):
-    name = "edit_option"
-    verbose_name = _("Edit Option")
-    url = "horizon:admin:check_global:update"
-    classes = ("ajax-modal", "btn-edit")
+class ToggleEnabled(tables.BatchAction):
+    name = "toggle"
+    action_present = (_("Enable"), _("Disable"))
+    action_past = (_("Enabled"), _("Disabled"))
+    data_type_singular = _("Option")
+    data_type_plural = _("Options")
+    classes = ("btn-toggle",)
     policy_rules = (('identity', 'admin_required'),)
 
-    def allowed(self, request, datum):
-        opt_id = request.session.get("option_id", None)
-        return opt_id is not "oa_address"
+    def get_policy_target(self, request, option=None):
+        if option:
+            return {"option_id": option.id}
+        return {}
 
-    def single(self, table, request, obj_id):
-        return
+    def allowed(self, request, option=None):
+        option_id = request.session.get("option_id", None)
+        if option_id is "oa_address":
+            return False
 
+        self.enabled = True
+        if not option:
+            return self.enabled
+        self.enabled = option.enabled
+        if self.enabled:
+            self.current_present_action = DISABLE
+        else:
+            self.current_present_action = ENABLE
+        return True
+
+#     def update(self, request, option=None):
+#         super(ToggleEnabled, self).update(request, option)
+#         if option and option.id == request.option.id:
+#             self.attrs["disabled"] = "disabled"
+
+    def action(self, request, obj_id):
+        if self.enabled:
+            api.nova.option_update_enabled(request, obj_id, False)
+            self.current_past_action = DISABLE
+        else:
+            api.nova.option_update_enabled(request, obj_id, True)
+            self.current_past_action = ENABLE
+    
 
 class SecurityChecksOptionsTable(tables.DataTable):
     name = tables.Column("id", verbose_name=_('Name'))
-    value = tables.Column('value', verbose_name=_('Value'))
+    value = tables.Column('enabled', verbose_name=_('Enabled'))
 
     class Meta:
         name = "security_checks_options"
         verbose_name = _("Security Checks Options")
         table_actions = (SecurityChecksOptionsFilterAction,)
         multi_select = False
-        row_actions = (EditOption,)
+        row_actions = (ToggleEnabled,)

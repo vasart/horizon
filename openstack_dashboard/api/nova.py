@@ -782,3 +782,7 @@ def periodic_checks_options(request):
 
 def periodic_checks_result_list(request):
     return novaclient(request).check_results.get_results_list()
+
+def option_update_enabled(request, option, enabled):
+    return novaclient(request).periodic_checks.options_update_enabled(option, enabled)
+
