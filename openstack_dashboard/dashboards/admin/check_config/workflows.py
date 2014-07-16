@@ -20,26 +20,20 @@ from openstack_dashboard import api
 
 
 class AddCheckInfoAction(workflows.Action):
-    _check_id_regex = (r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-'
-                        r'[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|[0-9]+|auto$')
-    _check_id_help_text = _("Check ID should be UUID4 or integer. "
-                             "Leave this field blank or use 'auto' to set "
-                             "a random UUID4.")
     name = forms.RegexField(label=_("Name"),
                             max_length=255,
                             regex=r'^[\w\.\- ]+$',
                             error_messages={'invalid': _('Name may only '
                                 'contain letters, numbers, underscores, '
                                 'periods and hyphens.')})
-    check_id = forms.RegexField(label=_("ID"),
-                             regex=_check_id_regex,
-                             required=False,
-                             initial='auto',
-                             help_text=_check_id_help_text)
 
-    desc = forms.IntegerField(label=_("Description"))
+    desc = forms.CharField(label=_("Description"))
+    
 
     timeout = forms.IntegerField(label=_("Timeout"),
+                            min_value=1)
+    
+    spacing = forms.IntegerField(label=_("Spacing"),
                             min_value=1)
 
     class Meta:
@@ -49,10 +43,9 @@ class AddCheckInfoAction(workflows.Action):
     def clean(self):
         cleaned_data = super(AddCheckInfoAction, self).clean()
         name = cleaned_data.get('name')
-        check_id = cleaned_data.get('check_id')
 
         try:
-            checks = api.nova.periodic_checks_list()
+            checks = api.nova.periodic_checks_list(self.request)
         except Exception:
             checks = []
             msg = _('Unable to get checks list')
@@ -65,12 +58,31 @@ class AddCheckInfoAction(workflows.Action):
                         _('The name "%s" is already used by another check.')
                         % name
                     )
-                if check.id == check_id:
-                    raise forms.ValidationError(
-                        _('The ID "%s" is already used by another check.')
-                        % check_id
-                    )
         return cleaned_data
+
+class UpdateCheckInfoAction(workflows.Action):
+     
+    check_id = forms.IntegerField(widget=forms.HiddenInput())
+
+    name = forms.RegexField(label=_("Name"),
+                            max_length=255,
+                            regex=r'^[\w\.\- ]+$',
+                            error_messages={'invalid': _('Name may only '
+                                'contain letters, numbers, underscores, '
+                                'periods and hyphens.')})
+
+    desc = forms.CharField(label=_("Description"))
+    
+
+    timeout = forms.IntegerField(label=_("Timeout"),
+                            min_value=1)
+    
+    spacing = forms.IntegerField(label=_("Spacing"),
+                            min_value=1)
+
+    class Meta:
+        name = _("Check Info")
+        help_text = _("From here you can edit a check.")
 
 
 class AddCheckInfo(workflows.Step):
@@ -78,16 +90,9 @@ class AddCheckInfo(workflows.Step):
     contributes = ("check_id",
                    "name",
                    "desc",
-                   "timeout")
-
-
-class UploadCheck(workflows.Step):
-    action_class = AddCheckInfoAction
-    contributes = ("check_id",
-                   "name",
-                   "desc",
-                   "timeout")
-
+                   "timeout",
+                   "spacing",
+                   )
 
 class AddCheck(workflows.Workflow):
     slug = "add_check"
@@ -95,9 +100,9 @@ class AddCheck(workflows.Workflow):
     finalize_button_name = _("Add Check")
     success_message = _('Added new check "%s".')
     failure_message = _('Unable to add check "%s".')
-    success_url = "horizon:admin:checks:index"
+    success_url = "horizon:admin:check_config:index"
     default_steps = (AddCheckInfo,
-                     UploadCheck)
+                     )
 
     def format_status_message(self, message):
         return message % self.context['name']
@@ -106,10 +111,12 @@ class AddCheck(workflows.Workflow):
         # Add new check
         # check_id = data.get('check_id') or 'auto'
         try:
-            self.object = api.nova.check_create(request,
+            self.object = api.nova.periodic_check_create(request,
                                                  name=data['name'],
                                                  desc=data['desc'],
-                                                 timeout=data['timeout'])
+                                                 timeout=data['timeout'],
+                                                 spacing=data['spacing'],
+                                                 )
         except Exception:
             exceptions.handle(request, _('Unable to add new check.'))
             return False
@@ -118,11 +125,12 @@ class AddCheck(workflows.Workflow):
 
 
 class UpdateCheckInfo(workflows.Step):
-    action_class = AddCheckInfoAction
+    action_class = UpdateCheckInfoAction
     contributes = ("check_id",
                    "name",
                    "desc",
-                   "timeout")
+                   "timeout",
+                   "spacing")
 
 
 class UpdateCheck(workflows.Workflow):
@@ -131,19 +139,28 @@ class UpdateCheck(workflows.Workflow):
     finalize_button_name = _("Save")
     success_message = _('Modified check "%s".')
     failure_message = _('Unable to modify check "%s".')
-    success_url = "horizon:admin:checks:index"
-    default_steps = (UpdateCheckInfo)
-
+    success_url = "horizon:admin:check_config:index"
+    default_steps = (UpdateCheckInfo,
+                     )
+ 
     def format_status_message(self, message):
         return message % self.context['name']
-
+ 
     def handle(self, request, data):
         # Update check information
         try:
             check_id = data['check_id']
-            api.nova.check_update(request, check_id)
+
+            api.nova.periodic_check_delete(request, check_id)
+            api.nova.periodic_check_create(request,
+                                           name=data['name'],
+                                           desc=data['desc'],
+                                           timeout=data['timeout'],
+                                           spacing=data['spacing'],
+                                           )
         except Exception:
             exceptions.handle(request, ignore=True)
             return False
-
+ 
         return True
+

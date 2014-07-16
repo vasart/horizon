@@ -18,8 +18,8 @@ from openstack_dashboard import api
 
 
 class DeleteCheck(tables.DeleteAction):
-    data_type_singular = _("Check")
-    data_type_plural = _("Checks")
+    data_type_singular = _("PeriodicCheck")
+    data_type_plural = _("PeriodicChecks")
 
     def delete(self, request, obj_id):
         api.nova.periodic_check_delete(request, obj_id)
@@ -28,22 +28,15 @@ class DeleteCheck(tables.DeleteAction):
 class AddCheck(tables.LinkAction):
     name = "add"
     verbose_name = _("Add Check")
-    url = "horizon:admin:checks:add"
+    url = "horizon:admin:check_config:add"
     classes = ("ajax-modal", "btn-create")
 
 
 class UpdateCheck(tables.LinkAction):
     name = "update"
     verbose_name = _("Edit Check")
-    url = "horizon:admin:checks:update"
+    url = "horizon:admin:check_config:update"
     classes = ("ajax-modal", "btn-edit")
-
-
-class ViewCheckExtras(tables.LinkAction):
-    name = "extras"
-    verbose_name = _("View Extra Specs")
-    url = "horizon:admin:checks:extras:index"
-    classes = ("btn-edit",)
 
 
 class CheckFilterAction(tables.FilterAction):
@@ -61,7 +54,8 @@ class PeriodicChecksTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_("Name"))
     desc = tables.Column('desc', verbose_name=_("Description"))
     timeout = tables.Column('timeout', verbose_name=_("Timeout"))
-
+    spacing = tables.Column('spacing', verbose_name=_("Spacing"))
+    
     class Meta:
         name = "checks"
         verbose_name = _("Periodic Checks")

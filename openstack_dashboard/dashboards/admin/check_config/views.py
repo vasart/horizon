@@ -58,16 +58,23 @@ class UpdateView(workflows.WorkflowView):
         check_id = self.kwargs['id']
 
         try:
+           
             # Get initial periodic check information
             check = api.nova.periodic_check_get(self.request, check_id)
+            f = open("/tmp/debug_horizon", "w")
+            f.write(check_id)
+            f.close() 
         except Exception:
             exceptions.handle(self.request,
                               _('Unable to retrieve check details.'),
                               redirect=reverse_lazy(INDEX_URL))
-        return {'check_id': check.id,
+        return {
+                'check_id' : check.id,
                 'name': check.name,
                 'desc': check.desc,
-                'timeout': check.tiemout, }
+                'timeout': check.timeout,
+                'spacing': check.spacing,
+                }
 
 
 '''
