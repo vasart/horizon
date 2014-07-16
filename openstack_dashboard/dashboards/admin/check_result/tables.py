@@ -23,7 +23,7 @@ class DeleteResult(tables.DeleteAction):
 
     def delete(self, request, obj_id):
         #change when nova part done
-        api.nova.flavor_delete(request, obj_id)
+        api.nova.periodic_checks_result_delete(request, obj_id)
 
 
 class ResultFilterAction(tables.FilterAction):
