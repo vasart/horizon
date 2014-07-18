@@ -55,7 +55,7 @@ class PeriodicChecksTable(tables.DataTable):
     desc = tables.Column('desc', verbose_name=_("Description"))
     timeout = tables.Column('timeout', verbose_name=_("Timeout"))
     spacing = tables.Column('spacing', verbose_name=_("Spacing"))
-    
+
     class Meta:
         name = "checks"
         verbose_name = _("Periodic Checks")

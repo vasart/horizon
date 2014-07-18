@@ -23,6 +23,7 @@ from openstack_dashboard import api
 ENABLE = 0
 DISABLE = 1
 
+
 def get_enabled(service, reverse=False):
     options = ["Enabled", "Disabled"]
     if reverse:
@@ -44,6 +45,7 @@ class SecurityChecksOptionsFilterAction(tables.FilterAction):
 
         return filter(comp, options)
 
+
 class ToggleEnabled(tables.BatchAction):
     name = "toggle"
     action_present = (_("Enable"), _("Disable"))
@@ -58,21 +60,6 @@ class ToggleEnabled(tables.BatchAction):
             return {"option_id": option.id}
         return {}
 
-    def allowed(self, request, option=None):
-        option_id = request.session.get("option_id", None)
-        if option_id is "oa_address":
-            return False
-
-        self.enabled = True
-        if not option:
-            return self.enabled
-        self.enabled = option.enabled
-        if self.enabled:
-            self.current_present_action = DISABLE
-        else:
-            self.current_present_action = ENABLE
-        return True
-
 #     def update(self, request, option=None):
 #         super(ToggleEnabled, self).update(request, option)
 #         if option and option.id == request.option.id:
@@ -85,10 +72,10 @@ class ToggleEnabled(tables.BatchAction):
         else:
             api.nova.option_update_enabled(request, obj_id, True)
             self.current_past_action = ENABLE
-    
+
 
 class SecurityChecksOptionsTable(tables.DataTable):
-    name = tables.Column("id", verbose_name=_('Name'))
+    name = tables.Column("name", verbose_name=_('Name'))
     value = tables.Column('enabled', verbose_name=_('Enabled'))
 
     class Meta:

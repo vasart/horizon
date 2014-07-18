@@ -783,11 +783,19 @@ def periodic_checks_options(request):
 def periodic_checks_result_list(request):
     return novaclient(request).check_results.get_results_list()
 
+
 def option_update_enabled(request, option, enabled):
-    return novaclient(request).periodic_checks.options_update_enabled(option, enabled)
+    client = novaclient(request)
+    return client.periodic_checks.options_update_enabled(option, enabled)
+
 
 def periodic_check_create(request, name, desc, timeout, spacing):
-    return novaclient(request).periodic_checks.periodic_check_create(name, desc, timeout, spacing)
+    client = novaclient(request)
+    return client.periodic_checks.periodic_check_create(name,
+                                                        desc,
+                                                        timeout,
+                                                        spacing)
+
 
 def periodic_checks_result_delete(request, result_id):
     return novaclient(request).check_results.result_delete(result_id)

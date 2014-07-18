@@ -28,13 +28,8 @@ class AddCheckInfoAction(workflows.Action):
                                 'periods and hyphens.')})
 
     desc = forms.CharField(label=_("Description"))
-    
-
-    timeout = forms.IntegerField(label=_("Timeout"),
-                            min_value=1)
-    
-    spacing = forms.IntegerField(label=_("Spacing"),
-                            min_value=1)
+    timeout = forms.IntegerField(label=_("Timeout"), min_value=1)
+    spacing = forms.IntegerField(label=_("Spacing"), min_value=1)
 
     class Meta:
         name = _("Check Info")
@@ -60,23 +55,18 @@ class AddCheckInfoAction(workflows.Action):
                     )
         return cleaned_data
 
-class UpdateCheckInfoAction(workflows.Action):
-     
-    check_id = forms.IntegerField(widget=forms.HiddenInput())
 
+class UpdateCheckInfoAction(workflows.Action):
+    check_id = forms.IntegerField(widget=forms.HiddenInput())
     name = forms.RegexField(label=_("Name"),
                             max_length=255,
                             regex=r'^[\w\.\- ]+$',
                             error_messages={'invalid': _('Name may only '
                                 'contain letters, numbers, underscores, '
                                 'periods and hyphens.')})
-
     desc = forms.CharField(label=_("Description"))
-    
-
     timeout = forms.IntegerField(label=_("Timeout"),
                             min_value=1)
-    
     spacing = forms.IntegerField(label=_("Spacing"),
                             min_value=1)
 
@@ -94,6 +84,7 @@ class AddCheckInfo(workflows.Step):
                    "spacing",
                    )
 
+
 class AddCheck(workflows.Workflow):
     slug = "add_check"
     name = _("Add Check")
@@ -101,8 +92,7 @@ class AddCheck(workflows.Workflow):
     success_message = _('Added new check "%s".')
     failure_message = _('Unable to add check "%s".')
     success_url = "horizon:admin:check_config:index"
-    default_steps = (AddCheckInfo,
-                     )
+    default_steps = (AddCheckInfo,)
 
     def format_status_message(self, message):
         return message % self.context['name']
@@ -112,11 +102,10 @@ class AddCheck(workflows.Workflow):
         # check_id = data.get('check_id') or 'auto'
         try:
             self.object = api.nova.periodic_check_create(request,
-                                                 name=data['name'],
-                                                 desc=data['desc'],
-                                                 timeout=data['timeout'],
-                                                 spacing=data['spacing'],
-                                                 )
+                                                    name=data['name'],
+                                                    desc=data['desc'],
+                                                    timeout=data['timeout'],
+                                                    spacing=data['spacing'],)
         except Exception:
             exceptions.handle(request, _('Unable to add new check.'))
             return False
@@ -140,17 +129,15 @@ class UpdateCheck(workflows.Workflow):
     success_message = _('Modified check "%s".')
     failure_message = _('Unable to modify check "%s".')
     success_url = "horizon:admin:check_config:index"
-    default_steps = (UpdateCheckInfo,
-                     )
- 
+    default_steps = (UpdateCheckInfo,)
+
     def format_status_message(self, message):
         return message % self.context['name']
- 
+
     def handle(self, request, data):
         # Update check information
         try:
             check_id = data['check_id']
-
             api.nova.periodic_check_delete(request, check_id)
             api.nova.periodic_check_create(request,
                                            name=data['name'],
@@ -161,6 +148,4 @@ class UpdateCheck(workflows.Workflow):
         except Exception:
             exceptions.handle(request, ignore=True)
             return False
- 
         return True
-
