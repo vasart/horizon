@@ -60,6 +60,17 @@ class ToggleEnabled(tables.BatchAction):
             return {"option_id": option.id}
         return {}
 
+    def allowed(self, request, option=None):
+        self.enabled = True
+        if not option:
+            return self.enabled
+        self.enabled = option.enabled
+        if self.enabled:
+            self.current_present_action = DISABLE
+        else:
+            self.current_present_action = ENABLE
+        return True
+
 #     def update(self, request, option=None):
 #         super(ToggleEnabled, self).update(request, option)
 #         if option and option.id == request.option.id:
@@ -75,7 +86,7 @@ class ToggleEnabled(tables.BatchAction):
 
 
 class SecurityChecksOptionsTable(tables.DataTable):
-    name = tables.Column("name", verbose_name=_('Name'))
+    name = tables.Column("id", verbose_name=_('Name'))
     value = tables.Column('enabled', verbose_name=_('Enabled'))
 
     class Meta:

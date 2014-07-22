@@ -34,7 +34,7 @@ class IdentityPanels(horizon.PanelGroup):
 class PeriodicChecksPanels(horizon.PanelGroup):
     slug = "periodic_checks"
     name = "Periodic Checks"
-    panels = ('check_global', 'check_config', 'check_result', 'check_logs')
+    panels = ('check_global', 'check_config', 'check_result')
 
 
 class Admin(horizon.Dashboard):
