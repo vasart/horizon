@@ -761,7 +761,7 @@ def can_set_server_password():
 
 
 def periodic_checks_list(request):
-    return novaclient(request).periodic_checks.get_checks_list()
+    return novaclient(request).periodic_checks.list()
 
 
 def periodic_check_get(request, check_id):

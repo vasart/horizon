@@ -24,3 +24,4 @@ python-swiftclient>=2.0.2
 python-troveclient>=1.0.4
 pytz>=2010h
 six>=1.6.0
+git+https://github.com/jcgregorio/httplib2.git
