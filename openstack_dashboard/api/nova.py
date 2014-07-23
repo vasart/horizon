@@ -791,10 +791,10 @@ def option_update_enabled(request, option, enabled):
 
 def periodic_check_create(request, name, desc, timeout, spacing):
     client = novaclient(request)
-    return client.periodic_checks.periodic_check_create(name,
-                                                        desc,
-                                                        timeout,
-                                                        spacing)
+    return client.periodic_checks.create(name,
+                                        desc,
+                                        timeout,
+                                        spacing,)
 
 
 def periodic_checks_result_delete(request, result_id):
