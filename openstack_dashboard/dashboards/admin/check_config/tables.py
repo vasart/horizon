@@ -23,6 +23,13 @@ class DeleteCheck(tables.DeleteAction):
 
     def delete(self, request, obj_id):
         api.nova.periodic_check_delete(request, obj_id)
+        
+    def allowed(self, request, check=None):
+        if (check == None):
+            return False
+        if (check.id == 0):
+            return False  
+        return True
 
 
 class AddCheck(tables.LinkAction):

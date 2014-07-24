@@ -137,13 +137,12 @@ class UpdateCheck(workflows.Workflow):
     def handle(self, request, data):
         # Update check information
         try:
-            check_id = data['check_id']
-            api.nova.periodic_check_delete(request, check_id)
-            api.nova.periodic_check_create(request,
+            api.nova.periodic_check_update(request,
                                            name=data['name'],
                                            desc=data['desc'],
                                            timeout=data['timeout'],
                                            spacing=data['spacing'],
+                                           check_id=data['check_id']
                                            )
         except Exception:
             exceptions.handle(request, ignore=True)

@@ -765,11 +765,11 @@ def periodic_checks_list(request):
 
 
 def periodic_check_get(request, check_id):
-    return novaclient(request).periodic_checks.get_specific_check(check_id)
+    return novaclient(request).periodic_checks.get(check_id)
 
 
-def periodic_check_delete(request, obj_id):
-    return novaclient(request).periodic_checks.periodic_check_delete(obj_id)
+def periodic_check_delete(request, check_id):
+    return novaclient(request).periodic_checks.delete(check_id)
 
 
 def periodic_checks_log(request):
@@ -795,6 +795,15 @@ def periodic_check_create(request, name, desc, timeout, spacing):
                                         desc,
                                         timeout,
                                         spacing,)
+
+
+def periodic_check_update(request, check_id, name, desc, timeout, spacing):
+    client = novaclient(request)
+    return client.periodic_checks.update(name,
+                                        desc,
+                                        timeout,
+                                        spacing,
+                                        check_id)
 
 
 def periodic_checks_result_delete(request, result_id):
