@@ -16,6 +16,8 @@ from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
 from horizon import tables
 from horizon import workflows
+from horizon import forms
+
 
 from openstack_dashboard import api
 
@@ -23,7 +25,8 @@ from openstack_dashboard.dashboards.admin.check_config \
     import tables as check_tables
 from openstack_dashboard.dashboards.admin.check_config \
     import workflows as check_workflows
-
+from openstack_dashboard.dashboards.admin.check_config \
+    import forms as project_forms
 
 INDEX_URL = "horizon:admin:check_config:index"
 
@@ -45,10 +48,10 @@ class IndexView(tables.DataTableView):
         return checks
 
 
-class AddView(workflows.WorkflowView):
-    workflow_class = check_workflows.AddCheck
+class AddView(forms.ModalFormView):
+    form_class = project_forms.AddCheckForm
     template_name = 'admin/check_config/add.html'
-
+    success_url = reverse_lazy("horizon:admin:check_config:index")
 
 class UpdateView(workflows.WorkflowView):
     workflow_class = check_workflows.UpdateCheck

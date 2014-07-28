@@ -789,12 +789,13 @@ def option_update_enabled(request, option, enabled):
     return client.periodic_checks.options_update_enabled(option, enabled)
 
 
-def periodic_check_create(request, name, desc, timeout, spacing):
+def periodic_check_create(request, name, desc, timeout, spacing, code):
     client = novaclient(request)
     return client.periodic_checks.create(name,
                                         desc,
                                         timeout,
-                                        spacing,)
+                                        spacing,
+                                        code)
 
 
 def periodic_check_update(request, check_id, name, desc, timeout, spacing):
