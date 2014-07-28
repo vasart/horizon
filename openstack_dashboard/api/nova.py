@@ -781,7 +781,7 @@ def periodic_checks_options(request):
 
 
 def periodic_checks_result_list(request):
-    return novaclient(request).check_results.get_results_list()
+    return novaclient(request).check_results.list()
 
 
 def option_update_enabled(request, option, enabled):
@@ -808,4 +808,4 @@ def periodic_check_update(request, check_id, name, desc, timeout, spacing):
 
 
 def periodic_checks_result_delete(request, result_id):
-    return novaclient(request).check_results.result_delete(result_id)
+    return novaclient(request).check_results.delete(result_id)
