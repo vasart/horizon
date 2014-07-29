@@ -19,43 +19,6 @@ from horizon import workflows
 from openstack_dashboard import api
 
 
-class AddCheckInfoAction(workflows.Action):
-    name = forms.RegexField(label=_("Name"),
-                            max_length=255,
-                            regex=r'^[\w\.\- ]+$',
-                            error_messages={'invalid': _('Name may only '
-                                'contain letters, numbers, underscores, '
-                                'periods and hyphens.')})
-
-    desc = forms.CharField(label=_("Description"))
-    timeout = forms.IntegerField(label=_("Timeout"), min_value=1)
-    spacing = forms.IntegerField(label=_("Period"), min_value=1)
-
-    class Meta:
-        name = _("Check Info")
-        help_text = _("From here you can add a new check.")
-
-    def clean(self):
-        cleaned_data = super(AddCheckInfoAction, self).clean()
-        name = cleaned_data.get('name')
-
-        try:
-            checks = api.nova.periodic_checks_list(self.request)
-        except Exception:
-            checks = []
-            msg = _('Unable to get checks list')
-            exceptions.check_message(["Connection", "refused"], msg)
-            raise
-        if checks is not None:
-            for check in checks:
-                if check.name == name:
-                    raise forms.ValidationError(
-                        _('The name "%s" is already used by another check.')
-                        % name
-                    )
-        return cleaned_data
-
-
 class UpdateCheckInfoAction(workflows.Action):
     check_id = forms.IntegerField(widget=forms.HiddenInput())
     name = forms.RegexField(label=_("Name"),
@@ -63,54 +26,22 @@ class UpdateCheckInfoAction(workflows.Action):
                             regex=r'^[\w\.\- ]+$',
                             error_messages={'invalid': _('Name may only '
                                 'contain letters, numbers, underscores, '
-                                'periods and hyphens.')})
-    desc = forms.CharField(label=_("Description"))
-    timeout = forms.IntegerField(label=_("Timeout"),
-                            min_value=1)
-    spacing = forms.IntegerField(label=_("Period"),
-                            min_value=1)
+                                'periods and hyphens.')},
+                            widget=forms.TextInput(attrs={'readonly':'True'}))
+
+    desc = forms.CharField(label=_("Description"),
+                           help_text=_("Short description for the check."),
+                           widget=forms.TextInput(attrs={'readonly':'True'}))
+    spacing = forms.IntegerField(label=_("Period, seconds"),
+                                 help_text=_("How much time should pass between two consecutive checks."),
+                                 min_value=1)    
+    timeout = forms.IntegerField(label=_("Timeout, seconds"),
+                                 help_text=_("Timeout in seconds for waiting for the check result."),
+                                 min_value=1)
 
     class Meta:
         name = _("Check Info")
         help_text = _("From here you can edit a check.")
-
-
-class AddCheckInfo(workflows.Step):
-    action_class = AddCheckInfoAction
-    contributes = ("check_id",
-                   "name",
-                   "desc",
-                   "timeout",
-                   "spacing",
-                   )
-
-
-class AddCheck(workflows.Workflow):
-    slug = "add_check"
-    name = _("Add Check")
-    finalize_button_name = _("Add Check")
-    success_message = _('Added new check "%s".')
-    failure_message = _('Unable to add check "%s".')
-    success_url = "horizon:admin:check_config:index"
-    default_steps = (AddCheckInfo,)
-
-    def format_status_message(self, message):
-        return message % self.context['name']
-
-    def handle(self, request, data):
-        # Add new check
-        # check_id = data.get('check_id') or 'auto'
-        try:
-            self.object = api.nova.periodic_check_create(request,
-                                                    name=data['name'],
-                                                    desc=data['desc'],
-                                                    timeout=data['timeout'],
-                                                    spacing=data['spacing'],)
-        except Exception:
-            exceptions.handle(request, _('Unable to add new check.'))
-            return False
-
-        return True
 
 
 class UpdateCheckInfo(workflows.Step):

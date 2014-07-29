@@ -38,10 +38,16 @@ class AddCheckForm(forms.SelfHandlingForm):
                                 'contain letters, numbers, underscores, '
                                 'periods and hyphens.')})
 
-    desc = forms.CharField(label=_("Description"))
-    timeout = forms.IntegerField(label=_("Timeout"), min_value=1)
-    spacing = forms.IntegerField(label=_("Period"), min_value=1)
-    code = forms.FileField(label=_("Check Code"))
+    desc = forms.CharField(label=_("Description"),
+                           help_text=_("Short description for the check."))
+    spacing = forms.IntegerField(label=_("Period, seconds"),
+                                 help_text=_("How much time should pass between two consecutive checks."),
+                                 min_value=1)    
+    timeout = forms.IntegerField(label=_("Timeout, seconds"),
+                                 help_text=_("Timeout in seconds for waiting for the check result."),
+                                 min_value=1)
+    code = forms.FileField(label=_("Check Code"),
+                           help_text=_("File containing logic of the check."))
 
     class Meta:
         name = _("Check Info")
