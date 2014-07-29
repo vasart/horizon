@@ -29,7 +29,7 @@ class AddCheckInfoAction(workflows.Action):
 
     desc = forms.CharField(label=_("Description"))
     timeout = forms.IntegerField(label=_("Timeout"), min_value=1)
-    spacing = forms.IntegerField(label=_("Spacing"), min_value=1)
+    spacing = forms.IntegerField(label=_("Period"), min_value=1)
 
     class Meta:
         name = _("Check Info")
@@ -67,7 +67,7 @@ class UpdateCheckInfoAction(workflows.Action):
     desc = forms.CharField(label=_("Description"))
     timeout = forms.IntegerField(label=_("Timeout"),
                             min_value=1)
-    spacing = forms.IntegerField(label=_("Spacing"),
+    spacing = forms.IntegerField(label=_("Period"),
                             min_value=1)
 
     class Meta:

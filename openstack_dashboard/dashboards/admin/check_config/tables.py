@@ -27,8 +27,8 @@ class DeleteCheck(tables.DeleteAction):
     def allowed(self, request, check=None):
         if (check == None):
             return False
-        if (check.id == 0):
-            return False  
+        if (check.name == "attestation_adapter"):
+            return False
         return True
 
 
@@ -61,7 +61,7 @@ class PeriodicChecksTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_("Name"))
     desc = tables.Column('desc', verbose_name=_("Description"))
     timeout = tables.Column('timeout', verbose_name=_("Timeout"))
-    spacing = tables.Column('spacing', verbose_name=_("Spacing"))
+    spacing = tables.Column('spacing', verbose_name=_("Period"))
 
     class Meta:
         name = "checks"

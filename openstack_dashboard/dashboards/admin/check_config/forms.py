@@ -40,7 +40,7 @@ class AddCheckForm(forms.SelfHandlingForm):
 
     desc = forms.CharField(label=_("Description"))
     timeout = forms.IntegerField(label=_("Timeout"), min_value=1)
-    spacing = forms.IntegerField(label=_("Spacing"), min_value=1)
+    spacing = forms.IntegerField(label=_("Period"), min_value=1)
     code = forms.FileField(label=_("Check Code"))
 
     class Meta:
