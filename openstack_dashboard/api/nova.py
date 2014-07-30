@@ -777,7 +777,7 @@ def periodic_checks_log(request):
 
 
 def periodic_checks_options(request):
-    return novaclient(request).periodic_checks.get_global_settings()
+    return novaclient(request).check_options.list()
 
 
 def periodic_checks_result_list(request):
@@ -786,7 +786,7 @@ def periodic_checks_result_list(request):
 
 def option_update_enabled(request, option, enabled):
     client = novaclient(request)
-    return client.periodic_checks.options_update_enabled(option, enabled)
+    return client.check_options.update(option, enabled)
 
 
 def periodic_check_create(request, name, desc, timeout, spacing, code):

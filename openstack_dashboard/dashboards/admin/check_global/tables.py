@@ -61,11 +61,11 @@ class ToggleEnabled(tables.BatchAction):
         return {}
 
     def allowed(self, request, option=None):
-        self.enabled = True
+        self.value = True
         if not option:
-            return self.enabled
-        self.enabled = option.enabled
-        if self.enabled:
+            return self.value
+        self.value = option.value
+        if self.value:
             self.current_present_action = DISABLE
         else:
             self.current_present_action = ENABLE
@@ -77,7 +77,7 @@ class ToggleEnabled(tables.BatchAction):
 #             self.attrs["disabled"] = "disabled"
 
     def action(self, request, obj_id):
-        if self.enabled:
+        if self.value:
             api.nova.option_update_enabled(request, obj_id, False)
             self.current_past_action = DISABLE
         else:
@@ -87,7 +87,7 @@ class ToggleEnabled(tables.BatchAction):
 
 class SecurityChecksOptionsTable(tables.DataTable):
     name = tables.Column("id", verbose_name=_('Name'))
-    value = tables.Column('enabled', verbose_name=_('Enabled'))
+    value = tables.Column('value', verbose_name=_('Value'))
 
     class Meta:
         name = "security_checks_options"
