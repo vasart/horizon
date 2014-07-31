@@ -42,6 +42,7 @@ class CheckTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_('Check Name'))
     node = tables.Column('node', verbose_name=_('Node Number'))
     results = tables.Column('result', verbose_name=_('Check Results'))
+    status = tables.Column('status', verbose_name=_('Node Status'))
 
     class Meta:
         name = "results"
