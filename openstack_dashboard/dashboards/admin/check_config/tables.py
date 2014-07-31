@@ -60,8 +60,8 @@ class CheckFilterAction(tables.FilterAction):
 class PeriodicChecksTable(tables.DataTable):
     name = tables.Column('name', verbose_name=_("Name"))
     desc = tables.Column('desc', verbose_name=_("Description"))
+    spacing = tables.Column('spacing', verbose_name=_("Period"))    
     timeout = tables.Column('timeout', verbose_name=_("Timeout"))
-    spacing = tables.Column('spacing', verbose_name=_("Period"))
 
     class Meta:
         name = "checks"
