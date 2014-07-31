@@ -18,6 +18,13 @@ from openstack_dashboard.dashboards.admin.check_global import constants
 from openstack_dashboard.dashboards.admin.check_global \
     import tables as project_tables
 
+class Option():
+    id_mapto_name = {"periodic_checks_enabled": "Periodic Checks Enabled",
+                     "trusted_pool_saved": "Trusted Pool is Saved When Going Down"}
+    def __init__(self, option_api):
+        self.id = option_api.id
+        self.name = Option.id_mapto_name[option_api.id]
+        self.value = option_api.value
 
 class IndexView(tables.DataTableView):
     table_class = project_tables.SecurityChecksOptionsTable
@@ -26,5 +33,8 @@ class IndexView(tables.DataTableView):
     template_name = constants.INFO_TEMPLATE_NAME
 
     def get_data(self):
-        options = api.nova.periodic_checks_options(self.request)
+        options = []
+        options_api = api.nova.periodic_checks_options(self.request)
+        for option in options_api:
+            options.append(Option(option))
         return options

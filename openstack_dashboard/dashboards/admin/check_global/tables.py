@@ -86,7 +86,7 @@ class ToggleEnabled(tables.BatchAction):
 
 
 class SecurityChecksOptionsTable(tables.DataTable):
-    name = tables.Column("id", verbose_name=_('Name'))
+    name = tables.Column("name", verbose_name=_('Name'))
     value = tables.Column('value', verbose_name=_('Value'))
 
     class Meta:
