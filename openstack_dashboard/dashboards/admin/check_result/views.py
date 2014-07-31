@@ -23,8 +23,19 @@ from openstack_dashboard.dashboards.admin.check_result \
 
 INDEX_URL = "horizon:admin:check_result:index"
 
-
-#change when nova part done
+class Result():
+    def __init__(self, result_api):
+        self.id = result_api.id
+        self.time = result_api.time
+        self.name = result_api.name
+        self.node = result_api.node
+        if int(result_api.result) == 0:
+            self.result = 'not_trusted'
+        elif int(result_api.result) == 1:
+            self.result = 'trusted'
+        else:
+            self.result = 'unknown'
+        self.status = result_api.status
 
 class IndexView(tables.DataTableView):
     table_class = project_tables.CheckTable
@@ -34,8 +45,10 @@ class IndexView(tables.DataTableView):
         request = self.request
         results = []
         try:
-            # results = api.nova.flavor_list(request, None)
-            results = api.nova.periodic_checks_result_list(request)
+            # results = api.nova.flavor_list(request, None)            
+            results_api = api.nova.periodic_checks_result_list(request)
+            for result_api in results_api:
+                results.append(Result(result_api))
         except Exception:
             exceptions.handle(request,
                               _('Unable to retrieve result list.'))
